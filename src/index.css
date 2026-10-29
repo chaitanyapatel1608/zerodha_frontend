@@ -5,9 +5,49 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: #424242;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* Expanded container width to eliminate excess side gutters on wide monitors */
+.container {
+  max-width: 1260px !important;
+}
+
+/* Professional Typography & Colors */
+h1, h2, h3, h4, h5, h6 {
+  color: #424242;
+  font-weight: 500;
+}
+
+p {
+  line-height: 1.8;
+  color: #666;
+}
+
+/* Zerodha Brand Link & Button Styles */
+a {
+  color: #387ed1;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #1f5ca3;
+}
+
+.btn-primary {
+  background-color: #387ed1 !important;
+  border-color: #387ed1 !important;
+  border-radius: 3px !important;
+  font-weight: 500 !important;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: #1f5ca3 !important;
+  border-color: #1f5ca3 !important;
 }
