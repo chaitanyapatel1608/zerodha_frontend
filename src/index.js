@@ -2,8 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css';
+import ScrollToTop from './ScrollToTop';
 import HomePage from './landing_page/home/HomePage';
 import Signup from './landing_page/signup/SignUp';
+import Login from './landing_page/login/Login';
 import AboutPage from './landing_page/about/AboutPage';
 import ProductPage from './landing_page/products/ProductsPage';
 import PricingPage from './landing_page/pricing/PricingPage';
@@ -15,10 +17,12 @@ import NotFound from './landing_page/NotFound';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
+    <ScrollToTop />
     <Navbar />
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/signup" element={<Signup />} />
+      <Route path="/login" element={<Login />} />
       <Route path="/about" element={<AboutPage />} />
       <Route path="/products" element={<ProductPage />} />
       <Route path="/product" element={<ProductPage />} />

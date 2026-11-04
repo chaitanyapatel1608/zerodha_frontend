@@ -1,0 +1,246 @@
+/* Zerodha Ecosystem Hamburger Mega-Menu Dropdown */
+.navbar-mega-dropdown-wrapper {
+  position: relative;
+}
+
+/* Minimalist Hamburger Button matching original Zerodha */
+.nav-hamburger-btn {
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: #444444;
+  padding: 6px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color 0.15s ease;
+  line-height: 1;
+}
+
+.nav-hamburger-btn:hover,
+.nav-hamburger-btn.active {
+  color: #387ed1;
+  background-color: transparent;
+}
+
+.nav-hamburger-icon {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 19px;
+  height: 14px;
+}
+
+.nav-hamburger-icon span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background-color: currentColor;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+}
+
+/* Dropdown Container */
+.navbar-mega-dropdown {
+  position: absolute;
+  top: calc(100% + 14px);
+  right: 0;
+  width: 610px;
+  max-width: 94vw;
+  background-color: #ffffff;
+  border-radius: 4px;
+  border: 1px solid #e6e6e6;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+  padding: 0;
+  overflow: hidden;
+  z-index: 1050;
+  animation: dropdownFade 0.18s ease-out forwards;
+}
+
+@keyframes dropdownFade {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Top Products Section (Pure White) */
+.mega-top-section {
+  background-color: #ffffff;
+  padding: 28px 32px 22px;
+}
+
+.mega-products-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.mega-product-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  text-decoration: none;
+  padding: 6px 4px;
+  border-radius: 4px;
+  transition: color 0.15s ease;
+}
+
+.mega-product-icon-wrap {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+}
+
+.mega-product-icon {
+  max-width: 38px;
+  max-height: 38px;
+  object-fit: contain;
+}
+
+.mega-product-title {
+  font-size: 14.5px;
+  font-weight: 500;
+  color: #424242;
+  margin-bottom: 2px;
+  transition: color 0.15s ease;
+}
+
+.mega-product-subtitle {
+  font-size: 11.5px;
+  color: #9b9b9b;
+  font-weight: 400;
+  line-height: 1.25;
+}
+
+.mega-product-item:hover .mega-product-title {
+  color: #387ed1;
+}
+
+/* Bottom Categorized Links Section (Authentic Soft Grey Background) */
+.mega-bottom-section {
+  background-color: #fafafb;
+  border-top: 1px solid #f0f0f2;
+  padding: 24px 32px 26px;
+}
+
+.mega-links-row {
+  display: grid;
+  grid-template-columns: 1.15fr 1.15fr 1.2fr;
+  gap: 20px;
+}
+
+.mega-link-col-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #424242;
+  margin-bottom: 12px;
+}
+
+.mega-links-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.mega-link-item {
+  display: inline-block;
+  font-size: 13px;
+  color: #666666;
+  text-decoration: none;
+  line-height: 1.35;
+  transition: color 0.15s ease;
+}
+
+.mega-link-item:hover {
+  color: #387ed1;
+}
+
+/* Education Items (Varsity & Trading Q&A) */
+.mega-education-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 28px;
+  margin-top: 4px;
+}
+
+.mega-education-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  text-align: center;
+  padding: 4px;
+  border-radius: 4px;
+  transition: color 0.15s ease;
+}
+
+.mega-education-icon-wrap {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+}
+
+.mega-education-icon-wrap img {
+  max-width: 32px;
+  max-height: 32px;
+  object-fit: contain;
+}
+
+.mega-education-title {
+  font-size: 12.5px;
+  color: #424242;
+  font-weight: 500;
+  transition: color 0.15s ease;
+  white-space: nowrap;
+}
+
+.mega-education-item:hover .mega-education-title {
+  color: #387ed1;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 991px) {
+  .navbar-mega-dropdown {
+    position: static;
+    width: 100%;
+    max-width: 100%;
+    box-shadow: none;
+    border: none;
+    border-top: 1px solid #eee;
+    padding: 0;
+    margin-top: 10px;
+  }
+
+  .mega-top-section {
+    padding: 16px 12px;
+  }
+
+  .mega-bottom-section {
+    padding: 18px 12px 20px;
+  }
+
+  .mega-products-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .mega-links-row {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}

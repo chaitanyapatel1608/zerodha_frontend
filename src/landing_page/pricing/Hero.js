@@ -11,7 +11,7 @@ function Hero() {
                 <h1 
                     className='fw-medium text-dark mb-3' 
                     style={{ fontSize: '2.5rem' }}
-                >
+                > 
                     Charges
                 </h1>
                 <p 

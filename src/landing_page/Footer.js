@@ -1,6 +1,9 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
 
 function Footer() {
+    const location = useLocation();
+    if (location.pathname === "/login") return null;
     return (
         <footer className="border-top" style={{ backgroundColor: "#fbfbfb" }}>
             <div className="container pt-5 pb-4">

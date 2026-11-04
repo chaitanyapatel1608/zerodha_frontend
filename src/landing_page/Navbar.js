@@ -1,78 +1,223 @@
-import React from "react";
-import {Link} from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
+import { Link, useLocation } from "react-router-dom";
+import NavbarDropdown from "./NavbarDropdown";
 
 function Navbar() {
-    return (
-        <nav 
-            className="navbar navbar-expand-lg bg-white border-bottom sticky-top py-3"
-            style={{ borderColor: "#eee" }}
+  const [currentUser, setCurrentUser] = useState(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isNavExpanded, setIsNavExpanded] = useState(false);
+  const location = useLocation();
+  const navRef = useRef(null);
+
+  // Hide main navbar on Kite login screen matching kite.zerodha.com
+  const isKiteLoginPage = location.pathname === "/login";
+
+  // Helper to close all menus (mobile collapse + mega-dropdown)
+  const closeAllMenus = () => {
+    setIsDropdownOpen(false);
+    setIsNavExpanded(false);
+  };
+
+  // Automatically close both dropdown and mobile menu on route transition
+  useEffect(() => {
+    closeAllMenus();
+  }, [location.pathname]);
+
+  // Close menus when clicking outside the navbar
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (navRef.current && !navRef.current.contains(event.target)) {
+        closeAllMenus();
+      }
+    };
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        closeAllMenus();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
+  const checkAuth = () => {
+    try {
+      const stored = localStorage.getItem("zerodha_user");
+      if (stored) {
+        setCurrentUser(JSON.parse(stored));
+      } else {
+        setCurrentUser(null);
+      }
+    } catch (e) {
+      setCurrentUser(null);
+    }
+  };
+
+  useEffect(() => {
+    checkAuth();
+    window.addEventListener("storage", checkAuth);
+    const handleAuthChange = (e) => setCurrentUser(e.detail);
+    window.addEventListener("zerodha_auth_change", handleAuthChange);
+    return () => {
+      window.removeEventListener("storage", checkAuth);
+      window.removeEventListener("zerodha_auth_change", handleAuthChange);
+    };
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("zerodha_token");
+    localStorage.removeItem("zerodha_user");
+    setCurrentUser(null);
+    closeAllMenus();
+    window.dispatchEvent(new Event("storage"));
+  };
+
+  if (isKiteLoginPage) {
+    return null;
+  }
+
+  return (
+    <nav
+      ref={navRef}
+      className="navbar navbar-expand-lg bg-white border-bottom sticky-top py-3"
+      style={{ borderColor: "#eee" }}
+    >
+      <div className="container">
+        {/* Brand Logo */}
+        <Link
+          className="navbar-brand p-0 d-flex align-items-center"
+          to="/"
+          onClick={closeAllMenus}
         >
-            <div className="container">
-                {/* Brand Logo - Increased size */}
-                <Link className="navbar-brand p-0 d-flex align-items-center" to="/">
-                    <img 
-                        src="/media/images/logo.svg" 
-                        alt="Zerodha Logo" 
-                        style={{ width: "160px" }} 
-                    />
+          <img
+            src="/media/images/logo.svg"
+            alt="Zerodha Logo"
+            style={{ width: "160px" }}
+          />
+        </Link>
+
+        {/* Mobile Toggle Button */}
+        <button
+          className="navbar-toggler border-0 shadow-none"
+          type="button"
+          onClick={() => setIsNavExpanded((prev) => !prev)}
+          aria-expanded={isNavExpanded}
+          aria-label="Toggle navigation"
+        >
+          <span className="navbar-toggler-icon"></span>
+        </button>
+
+        {/* Nav Links */}
+        <div
+          className={`collapse navbar-collapse ${isNavExpanded ? "show" : ""}`}
+          id="navbarSupportedContent"
+        >
+          <ul className="navbar-nav ms-auto align-items-center mb-2 mb-lg-0 gap-lg-4 gap-2">
+            {currentUser ? (
+              <>
+                <li className="nav-item">
+                  <a
+                    className="btn btn-sm text-white px-3 py-1 fw-semibold d-flex align-items-center gap-1 shadow-sm"
+                    href={`http://localhost:3001?token=${localStorage.getItem("zerodha_token")}&userId=${currentUser.userId}&name=${encodeURIComponent(currentUser.fullName || "Trader")}&email=${encodeURIComponent(currentUser.email || "")}`}
+                    style={{ backgroundColor: "#387ed1", borderRadius: "4px" }}
+                    onClick={closeAllMenus}
+                  >
+                    <span>Kite</span>
+                    <i className="fa-solid fa-arrow-up-right-from-square" style={{ fontSize: "11px" }}></i>
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <Link
+                    to="/signup"
+                    className="nav-link d-flex align-items-center gap-2 py-0"
+                    title="Account details"
+                    onClick={closeAllMenus}
+                  >
+                    <span
+                      className="rounded-circle text-white d-flex align-items-center justify-content-center fw-bold"
+                      style={{
+                        width: "28px",
+                        height: "28px",
+                        backgroundColor: "#f5a623",
+                        fontSize: "12px",
+                      }}
+                    >
+                      {currentUser.avatarText || "CU"}
+                    </span>
+                    <span className="fw-semibold text-dark small">{currentUser.userId}</span>
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <button
+                    onClick={handleLogout}
+                    className="btn btn-sm btn-link text-muted text-decoration-none p-0 small"
+                    title="Logout"
+                  >
+                    <i className="fa-solid fa-arrow-right-from-bracket"></i>
+                  </button>
+                </li>
+              </>
+            ) : (
+              <li className="nav-item">
+                <Link className="nav-link" to="/signup" onClick={closeAllMenus}>
+                  Signup
                 </Link>
+              </li>
+            )}
 
-                {/* Mobile Toggle Button */}
-                <button
-                    className="navbar-toggler border-0 shadow-none"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation"
-                >
-                    <span className="navbar-toggler-icon"></span>
-                </button>
+            <li className="nav-item">
+              <Link className="nav-link" to="/about" onClick={closeAllMenus}>
+                About
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/products" onClick={closeAllMenus}>
+                Products
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/pricing" onClick={closeAllMenus}>
+                Pricing
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/support" onClick={closeAllMenus}>
+                Support
+              </Link>
+            </li>
 
-                {/* Nav Links */}
-                <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul className="navbar-nav ms-auto align-items-center mb-2 mb-lg-0 gap-lg-4 gap-2">
-                        <li className="nav-item">
-                            <Link className="nav-link" to="/signup">
-                                Signup
-                            </Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="nav-link" to="/about">
-                                About
-                            </Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="nav-link" to="/products">
-                                Products
-                            </Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="nav-link" to ="/pricing">
-                                Pricing
-                            </Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="nav-link" to="/support">
-                                Support
-                            </Link>
-                        </li>
-                        {/* Formatted Hamburger Menu Button */}
-                        <li className="nav-item d-none d-lg-block">
-                            <button 
-                                className="btn border-0 p-2 d-flex align-items-center justify-content-center nav-hamburger-btn" 
-                                type="button" 
-                                aria-label="Open menu"
-                            >
-                                <i className="fa-solid fa-bars fs-5"></i>
-                            </button>
-                        </li>
-                    </ul>
+            {/* Ecosystem Hamburger Mega-Menu */}
+            <li className="nav-item position-relative">
+              <button
+                className={`nav-hamburger-btn ${isDropdownOpen ? "active" : ""}`}
+                type="button"
+                aria-label="Open Zerodha Ecosystem menu"
+                aria-expanded={isDropdownOpen}
+                onClick={() => setIsDropdownOpen((prev) => !prev)}
+                title="Zerodha products and apps"
+              >
+                <div className="nav-hamburger-icon">
+                  <span />
+                  <span />
+                  <span />
                 </div>
-            </div>
-        </nav>
-    );
+              </button>
+              <NavbarDropdown
+                isOpen={isDropdownOpen}
+                onClose={() => setIsDropdownOpen(false)}
+                currentUser={currentUser}
+              />
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  );
 }
 
 export default Navbar;

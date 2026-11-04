@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function Universe() {
     const partners = [
@@ -107,6 +108,8 @@ function Universe() {
             borderColor: "#387ed1",
             fontSize: "1.2rem",
             fontWeight: 500,
+            display: "inline-block",
+            textDecoration: "none",
         },
     };
 
@@ -157,13 +160,13 @@ function Universe() {
 
                 {/* Signup button */}
                 <div className="text-center" style={{ marginTop: "0px" }}>
-                    <button
-                        type="button"
+                    <Link
+                        to="/signup"
                         className="btn btn-primary"
                         style={styles.button}
                     >
                         Sign up for free
-                    </button>
+                    </Link>
                 </div>
             </div>
         </section>
