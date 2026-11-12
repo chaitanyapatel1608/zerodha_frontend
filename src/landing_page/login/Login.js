@@ -42,6 +42,7 @@ function Login() {
     try {
       const res = await fetch(`${API_BASE}/send-otp`, {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: cleanEmail,
@@ -118,6 +119,7 @@ function Login() {
     try {
       const res = await fetch(`${API_BASE}/verify-otp`, {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: email.trim().toLowerCase(),
@@ -138,8 +140,8 @@ function Login() {
       }
 
       // Persist session
-      localStorage.setItem("zerodha_token", data.token);
-      localStorage.setItem("zerodha_user", JSON.stringify(data.user));
+      localStorage.removeItem("zerodha_token");
+      localStorage.setItem("zerodha_user", JSON.stringify({ userId: data.user?.userId, fullName: data.user?.fullName, avatarText: data.user?.avatarText, role: data.user?.role }));
       window.dispatchEvent(new Event("storage"));
       window.dispatchEvent(new CustomEvent("zerodha_auth_change", { detail: data.user }));
 
