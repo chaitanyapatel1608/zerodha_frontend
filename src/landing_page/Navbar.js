@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import NavbarDropdown from "./NavbarDropdown";
+import { buildKiteLaunchUrl } from "../config/api";
 
 function Navbar() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -123,7 +124,7 @@ function Navbar() {
                 <li className="nav-item">
                   <a
                     className="btn btn-sm text-white px-3 py-1 fw-semibold d-flex align-items-center gap-1 shadow-sm"
-                    href={`http://localhost:3001?token=${localStorage.getItem("zerodha_token")}&userId=${currentUser.userId}&name=${encodeURIComponent(currentUser.fullName || "Trader")}&email=${encodeURIComponent(currentUser.email || "")}`}
+                    href={buildKiteLaunchUrl(currentUser)}
                     style={{ backgroundColor: "#387ed1", borderRadius: "4px" }}
                     onClick={closeAllMenus}
                   >

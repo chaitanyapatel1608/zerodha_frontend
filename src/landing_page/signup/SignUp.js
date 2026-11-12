@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-const API_BASE = "http://localhost:3002";
+import { API_BASE, buildKiteLaunchUrl } from "../../config/api";
 
 function SignUp() {
   // Mode: "signup" (full KYC registration) vs "login" (quick returning user login)
@@ -226,7 +226,7 @@ function SignUp() {
         setUserNotFound(true);
       } else {
         setErrorMsg(
-          err.response?.data?.message || "Could not reach authentication server on port 3002."
+          err.response?.data?.message || "Could not reach the authentication server. Please verify the backend service is running."
         );
       }
     } finally {
@@ -984,13 +984,7 @@ function SignUp() {
 
                 <div className="d-flex flex-column gap-2">
                   <a
-                    href={`http://localhost:3001?token=${localStorage.getItem(
-                      "zerodha_token"
-                    )}&userId=${userProfile.userId}&name=${encodeURIComponent(
-                      userProfile.fullName || "Trader"
-                    )}&email=${encodeURIComponent(userProfile.email || "")}&pan=${encodeURIComponent(
-                      userProfile.pan || ""
-                    )}&demat=${encodeURIComponent(userProfile.demat || "")}`}
+                    href={buildKiteLaunchUrl(userProfile)}
                     className="btn py-2.5 text-white fw-medium shadow-sm d-flex align-items-center justify-content-center gap-2"
                     style={{ backgroundColor: "#387ed1", fontSize: "15px" }}
                   >

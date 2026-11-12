@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { buildKiteLaunchUrl } from "../config/api";
 import "./NavbarDropdown.css";
 
 function NavbarDropdown({ isOpen, onClose, currentUser }) {
@@ -38,7 +39,7 @@ function NavbarDropdown({ isOpen, onClose, currentUser }) {
 
   // Kite trading terminal URL (launch directly if logged in, otherwise go to /login)
   const kiteTargetUrl = currentUser
-    ? `http://localhost:3001?token=${localStorage.getItem("zerodha_token")}&userId=${currentUser.userId}&name=${encodeURIComponent(currentUser.fullName || "Trader")}&email=${encodeURIComponent(currentUser.email || "")}&pan=${encodeURIComponent(currentUser.pan || "")}&demat=${encodeURIComponent(currentUser.demat || "")}`
+    ? buildKiteLaunchUrl(currentUser)
     : "/login";
 
   return (

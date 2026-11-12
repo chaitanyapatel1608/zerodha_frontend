@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Login.css";
 
-const API_BASE = "http://localhost:3002";
+import { API_BASE, buildKiteLaunchUrl } from "../../config/api";
 
 function Login() {
   // Form State
@@ -150,11 +150,7 @@ function Login() {
 
       // Redirect directly to Kite Trading Dashboard
       setTimeout(() => {
-        window.location.href = `http://localhost:3001?token=${data.token}&userId=${data.user.userId}&name=${encodeURIComponent(
-          data.user.fullName || "Trader"
-        )}&email=${encodeURIComponent(data.user.email || "")}&pan=${encodeURIComponent(
-          data.user.pan || ""
-        )}&demat=${encodeURIComponent(data.user.demat || "")}`;
+        window.location.href = buildKiteLaunchUrl(data.user);
       }, 700);
     } catch (err) {
       console.error("OTP verify error:", err);
