@@ -2,6 +2,7 @@
 
 const hostname = typeof window !== "undefined" ? window.location.hostname : "localhost";
 const protocol = typeof window !== "undefined" ? window.location.protocol : "http:";
+const isRender = typeof window !== "undefined" && window.location.hostname.includes("onrender.com");
 
 function readEnv(viteKey, legacyKey) {
   try {
@@ -20,13 +21,17 @@ function readEnv(viteKey, legacyKey) {
 
 export const API_BASE =
   readEnv("VITE_API_BASE_URL", "REACT_APP_API_BASE_URL") ||
-  (hostname === "localhost" || hostname === "127.0.0.1"
+  (isRender
+    ? "https://zerodha-backend-xbtx.onrender.com"
+    : hostname === "localhost" || hostname === "127.0.0.1"
     ? "http://localhost:3002"
     : `${protocol}//${hostname}:3002`);
 
 export const DASHBOARD_URL =
   readEnv("VITE_DASHBOARD_URL", "REACT_APP_DASHBOARD_URL") ||
-  (hostname === "localhost" || hostname === "127.0.0.1"
+  (isRender
+    ? "https://zerodha-dashboard-6zf2.onrender.com"
+    : hostname === "localhost" || hostname === "127.0.0.1"
     ? "http://localhost:3001"
     : `${protocol}//${hostname}:3001`);
 
