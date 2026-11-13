@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Login.css";
 
-import { API_BASE, buildKiteLaunchUrl } from "../../config/api";
+import { API_BASE, buildKiteLaunchUrl, setCsrfToken } from "../../config/api";
 
 function Login() {
   // Form State
@@ -140,6 +140,9 @@ function Login() {
       }
 
       // Persist session
+      if (data.csrfToken) {
+        setCsrfToken(data.csrfToken);
+      }
       localStorage.removeItem("zerodha_token");
       localStorage.setItem("zerodha_user", JSON.stringify({ userId: data.user?.userId, fullName: data.user?.fullName, avatarText: data.user?.avatarText, role: data.user?.role }));
       window.dispatchEvent(new Event("storage"));

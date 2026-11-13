@@ -41,6 +41,39 @@ export function readCookie(name) {
   return match ? decodeURIComponent(match[1]) : "";
 }
 
+let inMemoryCsrf = "";
+
+export function setCsrfToken(token) {
+  if (token) {
+    inMemoryCsrf = token;
+    try {
+      if (typeof sessionStorage !== "undefined") sessionStorage.setItem("zerodha_csrf", token);
+    } catch (e) {}
+    try {
+      if (typeof localStorage !== "undefined") localStorage.setItem("zerodha_csrf", token);
+    } catch (e) {}
+  }
+}
+
+export function getCsrfToken() {
+  const cookieVal = readCookie("zerodha_csrf");
+  if (cookieVal) return cookieVal;
+  if (inMemoryCsrf) return inMemoryCsrf;
+  try {
+    if (typeof sessionStorage !== "undefined") {
+      const s = sessionStorage.getItem("zerodha_csrf");
+      if (s) return s;
+    }
+  } catch (e) {}
+  try {
+    if (typeof localStorage !== "undefined") {
+      const l = localStorage.getItem("zerodha_csrf");
+      if (l) return l;
+    }
+  } catch (e) {}
+  return "";
+}
+
 export function buildKiteLaunchUrl(user) {
   if (!user) return "/login";
   // Session is carried by HttpOnly SameSite cookie — never pass tokens or PII in URLs

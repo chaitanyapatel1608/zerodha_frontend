@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import NavbarDropdown from "./NavbarDropdown";
-import { API_BASE, buildKiteLaunchUrl, readCookie } from "../config/api";
+import { API_BASE, buildKiteLaunchUrl, readCookie, getCsrfToken } from "../config/api";
 
 function Navbar() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -72,7 +72,7 @@ function Navbar() {
 
   const handleLogout = async () => {
     try {
-      const csrf = readCookie("zerodha_csrf");
+      const csrf = getCsrfToken();
       await fetch(`${API_BASE}/logout`, {
         method: "POST",
         credentials: "include",
@@ -81,6 +81,10 @@ function Navbar() {
     } catch (_) {}
     localStorage.removeItem("zerodha_token");
     localStorage.removeItem("zerodha_user");
+    localStorage.removeItem("zerodha_csrf");
+    try {
+      sessionStorage.removeItem("zerodha_csrf");
+    } catch (_) {}
     setCurrentUser(null);
     closeAllMenus();
     window.dispatchEvent(new Event("storage"));
