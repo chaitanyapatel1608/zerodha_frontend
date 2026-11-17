@@ -984,7 +984,7 @@ function SignUp() {
 
                 <div className="d-flex flex-column gap-2">
                   <a
-                    href={buildKiteLaunchUrl(userProfile)}
+                    href={buildKiteLaunchUrl(userProfile, typeof localStorage !== "undefined" ? localStorage.getItem("zerodha_token") : "")}
                     className="btn py-2.5 text-white fw-medium shadow-sm d-flex align-items-center justify-content-center gap-2"
                     style={{ backgroundColor: "#387ed1", fontSize: "15px" }}
                   >

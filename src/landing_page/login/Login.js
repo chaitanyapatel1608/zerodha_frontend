@@ -143,7 +143,9 @@ function Login() {
       if (data.csrfToken) {
         setCsrfToken(data.csrfToken);
       }
-      localStorage.removeItem("zerodha_token");
+      if (data.token) {
+        localStorage.setItem("zerodha_token", data.token);
+      }
       localStorage.setItem("zerodha_user", JSON.stringify({ userId: data.user?.userId, fullName: data.user?.fullName, avatarText: data.user?.avatarText, role: data.user?.role }));
       window.dispatchEvent(new Event("storage"));
       window.dispatchEvent(new CustomEvent("zerodha_auth_change", { detail: data.user }));
@@ -155,7 +157,7 @@ function Login() {
 
       // Redirect directly to Kite Trading Dashboard
       setTimeout(() => {
-        window.location.href = buildKiteLaunchUrl(data.user);
+        window.location.href = buildKiteLaunchUrl(data.user, data.token);
       }, 700);
     } catch (err) {
       console.error("OTP verify error:", err);

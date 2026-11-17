@@ -39,7 +39,7 @@ function NavbarDropdown({ isOpen, onClose, currentUser }) {
 
   // Kite trading terminal URL (launch directly if logged in, otherwise go to /login)
   const kiteTargetUrl = currentUser
-    ? buildKiteLaunchUrl(currentUser)
+    ? buildKiteLaunchUrl(currentUser, typeof localStorage !== "undefined" ? localStorage.getItem("zerodha_token") : "")
     : "/login";
 
   return (

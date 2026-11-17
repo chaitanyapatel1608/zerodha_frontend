@@ -74,8 +74,10 @@ export function getCsrfToken() {
   return "";
 }
 
-export function buildKiteLaunchUrl(user) {
+export function buildKiteLaunchUrl(user, token) {
   if (!user) return "/login";
-  // Session is carried by HttpOnly SameSite cookie — never pass tokens or PII in URLs
+  if (token) {
+    return `${DASHBOARD_URL}/#token=${encodeURIComponent(token)}`;
+  }
   return `${DASHBOARD_URL}/`;
 }

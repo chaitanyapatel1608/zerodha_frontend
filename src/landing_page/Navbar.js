@@ -136,7 +136,7 @@ function Navbar() {
                 <li className="nav-item">
                   <a
                     className="btn btn-sm text-white px-3 py-1 fw-semibold d-flex align-items-center gap-1 shadow-sm"
-                    href={buildKiteLaunchUrl(currentUser)}
+                    href={buildKiteLaunchUrl(currentUser, typeof localStorage !== "undefined" ? localStorage.getItem("zerodha_token") : "")}
                     style={{ backgroundColor: "#387ed1", borderRadius: "4px" }}
                     onClick={closeAllMenus}
                   >
