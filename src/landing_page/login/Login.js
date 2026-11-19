@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./Login.css";
 
@@ -13,8 +13,22 @@ function Login() {
 
   // Loading & Feedback State
   const [isLoading, setIsLoading] = useState(false);
-  const [alert, setAlert] = useState(null); // { type: "error" | "success", message: "", showSignupLink?: boolean }
+  const [alert, setAlert] = useState(null); // { type: "error" | "success" | "info", message: "", showSignupLink?: boolean }
   const [resendCooldown, setResendCooldown] = useState(0);
+
+  // Check URL query parameters for authorization notice banner (e.g. redirected from email approval)
+  useEffect(() => {
+    try {
+      const searchParams = new URLSearchParams(window.location.search);
+      const notice = searchParams.get("notice") || searchParams.get("message");
+      if (notice) {
+        setAlert({
+          type: "info",
+          message: decodeURIComponent(notice),
+        });
+      }
+    } catch (e) {}
+  }, []);
 
   // Helper to mask email for display (e.g. ch***@gmail.com)
   const maskEmailAddress = (rawEmail) => {
@@ -199,7 +213,11 @@ function Login() {
           <div className={`kite-alert-box kite-alert-${alert.type}`}>
             <i
               className={`fa-solid ${
-                alert.type === "error" ? "fa-circle-exclamation" : "fa-circle-check"
+                alert.type === "error"
+                  ? "fa-circle-exclamation"
+                  : alert.type === "info"
+                  ? "fa-circle-info"
+                  : "fa-circle-check"
               } mt-1`}
             ></i>
             <div>

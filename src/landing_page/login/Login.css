@@ -262,3 +262,9 @@
   color: #2e7d32;
   border: 1px solid #c8e6c9;
 }
+
+.kite-alert-info {
+  background-color: #eff6ff;
+  color: #1e40af;
+  border: 1px solid #bfdbfe;
+}

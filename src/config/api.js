@@ -107,6 +107,14 @@ export function buildKiteLaunchUrl(user, token, redirectUri = "") {
       base = redirectUri;
     }
   }
+
+  // When redirecting back to backend actions (e.g. fundDeposit/action or ipoMandate/action),
+  // pass the auth_token in query params so the server can authenticate and set cookies.
+  if (token && (base.includes("/fundDeposit/action") || base.includes("/ipoMandate/action") || base.includes("backend"))) {
+    const separator = base.includes("?") ? "&" : "?";
+    return `${base}${separator}auth_token=${encodeURIComponent(token)}`;
+  }
+
   if (token) {
     const [pathPart] = base.split("#");
     return `${pathPart}#token=${encodeURIComponent(token)}`;
