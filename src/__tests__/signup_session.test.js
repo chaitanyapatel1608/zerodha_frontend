@@ -27,8 +27,12 @@ it("signup verifies with credentials and stores only the display profile and CSR
   for (const [index, digit] of [..."123456"].entries()) fireEvent.change(screen.getByLabelText(`Verification digit ${index + 1}`), { target: { value: digit } });
   fireEvent.click(screen.getByRole("button", { name: "Verify & Open Demat Account" }));
   await screen.findByText(/Welcome, Alice Trader/);
+  await screen.findByText("Redirecting to Kite Dashboard...");
   expect(post).toHaveBeenNthCalledWith(2, `${API_BASE}/verify-otp`, expect.objectContaining({ otp: "123456" }), { withCredentials: true });
   expect(JSON.parse(localStorage.getItem("zerodha_user"))).toEqual({ userId: "alice", fullName: "Alice Trader", role: "user" });
+  expect(JSON.parse(sessionStorage.getItem("zerodha_user"))).toEqual({ userId: "alice", fullName: "Alice Trader", role: "user" });
+  expect(localStorage.getItem("zerodha_token")).toBe("handoff-token");
+  expect(sessionStorage.getItem("zerodha_token")).toBe("handoff-token");
   expect(getCsrfToken()).toBe("test-csrf");
 });
 

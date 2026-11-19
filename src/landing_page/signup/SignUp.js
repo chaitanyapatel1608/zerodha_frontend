@@ -41,6 +41,7 @@ function SignUp() {
   const [successMsg, setSuccessMsg] = useState("");
   const [resendTimer, setResendTimer] = useState(30);
   const [userProfile, setUserProfile] = useState(null);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   const otpInputsRef = useRef([]);
 
@@ -308,14 +309,21 @@ function SignUp() {
       if (response.data.success) {
         const { token, user } = response.data;
         if (response.data.csrfToken) setCsrfToken(response.data.csrfToken);
-        if (token) localStorage.setItem("zerodha_token", token);
-        else localStorage.removeItem("zerodha_token");
-        localStorage.setItem("zerodha_user", JSON.stringify({
+        if (token) {
+          try { sessionStorage.setItem("zerodha_token", token); } catch {}
+          localStorage.setItem("zerodha_token", token);
+        } else {
+          try { sessionStorage.removeItem("zerodha_token"); } catch {}
+          localStorage.removeItem("zerodha_token");
+        }
+        const userObj = {
           userId: user.userId,
           fullName: user.fullName,
           avatarText: user.avatarText,
           role: user.role,
-        }));
+        };
+        try { sessionStorage.setItem("zerodha_user", JSON.stringify(userObj)); } catch {}
+        localStorage.setItem("zerodha_user", JSON.stringify(userObj));
 
         // Notify Navbar across the app
         window.dispatchEvent(new Event("storage"));
@@ -323,7 +331,19 @@ function SignUp() {
 
         setUserProfile(user);
         setStep(3);
-        setSuccessMsg("Account verified successfully! Welcome to Zerodha.");
+        setIsRedirecting(true);
+        setSuccessMsg("Account verified successfully! Welcome to Zerodha. Redirecting to Kite Dashboard...");
+
+        // Auto-redirect to Kite Dashboard (preserving any redirect query parameter)
+        const searchParams = new URLSearchParams(window.location.search);
+        const redirectTarget = searchParams.get("redirect_uri") || searchParams.get("redirect") || "";
+        setTimeout(() => {
+          try {
+            window.location.href = buildKiteLaunchUrl(user, token, redirectTarget);
+          } catch (e) {
+            console.error("Redirect error:", e);
+          }
+        }, 1200);
       } else {
         setErrorMsg(response.data.message || "Invalid OTP code.");
       }
@@ -358,6 +378,8 @@ function SignUp() {
     }
     localStorage.removeItem("zerodha_token");
     localStorage.removeItem("zerodha_user");
+    try { sessionStorage.removeItem("zerodha_token"); } catch {}
+    try { sessionStorage.removeItem("zerodha_user"); } catch {}
     setCsrfToken("");
     window.dispatchEvent(new Event("storage"));
     window.dispatchEvent(new CustomEvent("zerodha_auth_change", { detail: null }));
@@ -974,6 +996,12 @@ function SignUp() {
                   <p className="text-muted small mb-0">
                     Your Zerodha Demat &amp; Trading Account is fully active.
                   </p>
+                  {isRedirecting && (
+                    <div className="mt-2 text-primary small d-flex align-items-center justify-content-center gap-2 py-1 bg-primary-subtle rounded border border-primary-subtle">
+                      <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                      <span className="fw-medium">Redirecting to Kite Dashboard...</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Demat Certificate Card */}
@@ -1011,11 +1039,11 @@ function SignUp() {
 
                 <div className="d-flex flex-column gap-2">
                   <a
-                    href={buildKiteLaunchUrl(userProfile, typeof localStorage !== "undefined" ? localStorage.getItem("zerodha_token") : "")}
+                    href={buildKiteLaunchUrl(userProfile, typeof localStorage !== "undefined" ? (localStorage.getItem("zerodha_token") || (typeof sessionStorage !== "undefined" ? sessionStorage.getItem("zerodha_token") : "")) : "")}
                     className="btn py-2.5 text-white fw-medium shadow-sm d-flex align-items-center justify-content-center gap-2"
                     style={{ backgroundColor: "#387ed1", fontSize: "15px" }}
                   >
-                    <span>Launch Kite Dashboard</span>
+                    <span>{isRedirecting ? "Launching Kite Dashboard..." : "Launch Kite Dashboard"}</span>
                     <i className="fa-solid fa-arrow-up-right-from-square small"></i>
                   </a>
 
