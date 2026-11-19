@@ -44,6 +44,12 @@ export function readCookie(name) {
 let inMemoryCsrf = "";
 
 export function setCsrfToken(token) {
+  if (!token) {
+    inMemoryCsrf = "";
+    try { sessionStorage.removeItem("zerodha_csrf"); } catch {}
+    try { localStorage.removeItem("zerodha_csrf"); } catch {}
+    return;
+  }
   if (token) {
     inMemoryCsrf = token;
     try {

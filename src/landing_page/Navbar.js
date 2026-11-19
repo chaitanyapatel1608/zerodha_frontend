@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import NavbarDropdown from "./NavbarDropdown";
-import { API_BASE, buildKiteLaunchUrl, readCookie, getCsrfToken } from "../config/api";
+import { API_BASE, buildKiteLaunchUrl, getCsrfToken, setCsrfToken } from "../config/api";
 
 function Navbar() {
   const [currentUser, setCurrentUser] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isNavExpanded, setIsNavExpanded] = useState(false);
+  const [logoutError, setLogoutError] = useState("");
   const location = useLocation();
   const navRef = useRef(null);
 
@@ -71,17 +72,27 @@ function Navbar() {
   }, []);
 
   const handleLogout = async () => {
+    setLogoutError("");
     try {
       const csrf = getCsrfToken();
-      await fetch(`${API_BASE}/logout`, {
+      const token = localStorage.getItem("zerodha_token");
+      const response = await fetch(`${API_BASE}/logout`, {
         method: "POST",
         credentials: "include",
-        headers: csrf ? { "X-CSRF-Token": csrf } : {},
+        headers: {
+          ...(csrf ? { "X-CSRF-Token": csrf } : {}),
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
       });
-    } catch (_) {}
+      if (!response.ok && response.status !== 401) throw new Error("Session revocation failed");
+    } catch {
+      setLogoutError("Could not sign out securely. Please try again.");
+      return;
+    }
     localStorage.removeItem("zerodha_token");
     localStorage.removeItem("zerodha_user");
     localStorage.removeItem("zerodha_csrf");
+    setCsrfToken("");
     try {
       sessionStorage.removeItem("zerodha_csrf");
     } catch (_) {}
@@ -101,6 +112,7 @@ function Navbar() {
       style={{ borderColor: "#eee" }}
     >
       <div className="container">
+        {logoutError && <div role="alert">{logoutError}</div>}
         {/* Brand Logo */}
         <Link
           className="navbar-brand p-0 d-flex align-items-center"

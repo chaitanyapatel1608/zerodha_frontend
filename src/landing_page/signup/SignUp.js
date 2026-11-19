@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-import { API_BASE, buildKiteLaunchUrl } from "../../config/api";
+import { API_BASE, buildKiteLaunchUrl, getCsrfToken, setCsrfToken } from "../../config/api";
 
 function SignUp() {
   // Mode: "signup" (full KYC registration) vs "login" (quick returning user login)
@@ -303,12 +303,19 @@ function SignUp() {
         dob: formData.dob,
         annualIncome: formData.annualIncome,
         tradingExp: formData.tradingExp,
-      });
+      }, { withCredentials: true });
 
       if (response.data.success) {
         const { token, user } = response.data;
-        localStorage.setItem("zerodha_token", token);
-        localStorage.setItem("zerodha_user", JSON.stringify(user));
+        if (response.data.csrfToken) setCsrfToken(response.data.csrfToken);
+        if (token) localStorage.setItem("zerodha_token", token);
+        else localStorage.removeItem("zerodha_token");
+        localStorage.setItem("zerodha_user", JSON.stringify({
+          userId: user.userId,
+          fullName: user.fullName,
+          avatarText: user.avatarText,
+          role: user.role,
+        }));
 
         // Notify Navbar across the app
         window.dispatchEvent(new Event("storage"));
@@ -331,9 +338,27 @@ function SignUp() {
   };
 
   // Logout handler
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    setLoading(true);
+    setErrorMsg("");
+    try {
+      const token = localStorage.getItem("zerodha_token");
+      const csrf = getCsrfToken();
+      await axios.post(`${API_BASE}/logout`, {}, {
+        withCredentials: true,
+        headers: {
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          ...(csrf ? { "X-CSRF-Token": csrf } : {}),
+        },
+      });
+    } catch {
+      setErrorMsg("Could not sign out securely. Please try again.");
+      setLoading(false);
+      return;
+    }
     localStorage.removeItem("zerodha_token");
     localStorage.removeItem("zerodha_user");
+    setCsrfToken("");
     window.dispatchEvent(new Event("storage"));
     window.dispatchEvent(new CustomEvent("zerodha_auth_change", { detail: null }));
     setUserProfile(null);
@@ -343,6 +368,7 @@ function SignUp() {
     setSuccessMsg("");
     setErrorMsg("");
     setFieldErrors({});
+    setLoading(false);
   };
 
   return (
@@ -874,6 +900,7 @@ function SignUp() {
                         ref={(el) => (otpInputsRef.current[index] = el)}
                         type="text"
                         inputMode="numeric"
+                        aria-label={`Verification digit ${index + 1}`}
                         maxLength="1"
                         className="form-control text-center fw-bold p-0"
                         style={{
@@ -1001,6 +1028,7 @@ function SignUp() {
 
                   <button
                     onClick={handleLogout}
+                    disabled={loading}
                     className="btn btn-link text-danger small text-decoration-none mt-2"
                   >
                     Sign out from this account
