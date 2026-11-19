@@ -80,10 +80,36 @@ export function getCsrfToken() {
   return "";
 }
 
-export function buildKiteLaunchUrl(user, token) {
-  if (!user) return "/login";
-  if (token) {
-    return `${DASHBOARD_URL}/#token=${encodeURIComponent(token)}`;
+function isValidDashboardRedirect(url) {
+  if (!url) return false;
+  try {
+    if (url.startsWith("/")) return true;
+    const parsed = new URL(url);
+    const parsedDash = new URL(DASHBOARD_URL);
+    return (
+      parsed.origin === parsedDash.origin ||
+      parsed.hostname === "localhost" ||
+      parsed.hostname === "127.0.0.1" ||
+      parsed.hostname.endsWith(".onrender.com")
+    );
+  } catch {
+    return false;
   }
-  return `${DASHBOARD_URL}/`;
+}
+
+export function buildKiteLaunchUrl(user, token, redirectUri = "") {
+  if (!user) return "/login";
+  let base = `${DASHBOARD_URL}/`;
+  if (redirectUri && isValidDashboardRedirect(redirectUri)) {
+    if (redirectUri.startsWith("/")) {
+      base = `${DASHBOARD_URL}${redirectUri}`;
+    } else {
+      base = redirectUri;
+    }
+  }
+  if (token) {
+    const [pathPart] = base.split("#");
+    return `${pathPart}#token=${encodeURIComponent(token)}`;
+  }
+  return base;
 }

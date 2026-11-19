@@ -16,6 +16,7 @@ import SupportPage from './landing_page/support/SupportPage';
 import Navbar from './landing_page/Navbar';
 import Footer from './landing_page/Footer';
 import NotFound from './landing_page/NotFound';
+import TradingRouteBridge from './landing_page/TradingRouteBridge';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -31,6 +32,11 @@ root.render(
       <Route path="/product" element={<ProductPage />} />
       <Route path="/pricing" element={<PricingPage />} />
       <Route path="/support" element={<SupportPage />} />
+      <Route path="/funds" element={<TradingRouteBridge targetPath="/funds" />} />
+      <Route path="/orders" element={<TradingRouteBridge targetPath="/orders" />} />
+      <Route path="/holdings" element={<TradingRouteBridge targetPath="/holdings" />} />
+      <Route path="/positions" element={<TradingRouteBridge targetPath="/positions" />} />
+      <Route path="/bids" element={<TradingRouteBridge targetPath="/bids" />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
     <Footer />

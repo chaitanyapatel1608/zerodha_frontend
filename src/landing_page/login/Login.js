@@ -139,14 +139,17 @@ function Login() {
         return;
       }
 
-      // Persist session
+      // Persist session across storage mechanisms
       if (data.csrfToken) {
         setCsrfToken(data.csrfToken);
       }
       if (data.token) {
-        localStorage.setItem("zerodha_token", data.token);
+        try { sessionStorage.setItem("zerodha_token", data.token); } catch {}
+        try { localStorage.setItem("zerodha_token", data.token); } catch {}
       }
-      localStorage.setItem("zerodha_user", JSON.stringify({ userId: data.user?.userId, fullName: data.user?.fullName, avatarText: data.user?.avatarText, role: data.user?.role }));
+      const userData = JSON.stringify({ userId: data.user?.userId, fullName: data.user?.fullName, avatarText: data.user?.avatarText, role: data.user?.role });
+      try { sessionStorage.setItem("zerodha_user", userData); } catch {}
+      try { localStorage.setItem("zerodha_user", userData); } catch {}
       window.dispatchEvent(new Event("storage"));
       window.dispatchEvent(new CustomEvent("zerodha_auth_change", { detail: data.user }));
 
@@ -155,9 +158,13 @@ function Login() {
         message: `Welcome back, ${data.user.fullName || data.user.userId}! Launching Kite...`,
       });
 
-      // Redirect directly to Kite Trading Dashboard
+      // Read optional redirect target from URL query params
+      const searchParams = new URLSearchParams(window.location.search);
+      const redirectTarget = searchParams.get("redirect_uri") || searchParams.get("redirect") || "";
+
+      // Redirect directly to Kite Trading Dashboard (preserving target if provided)
       setTimeout(() => {
-        window.location.href = buildKiteLaunchUrl(data.user, data.token);
+        window.location.href = buildKiteLaunchUrl(data.user, data.token, redirectTarget);
       }, 700);
     } catch (err) {
       console.error("OTP verify error:", err);
