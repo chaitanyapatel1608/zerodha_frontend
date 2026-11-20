@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import KiteDatePicker from "../common/KiteDatePicker";
 
 import { API_BASE, buildKiteLaunchUrl, getCsrfToken, setCsrfToken } from "../../config/api";
 
@@ -684,13 +685,11 @@ function SignUp() {
                           <label className="form-label small text-muted fw-semibold mb-1">
                             Date of Birth <span className="text-danger">*</span>
                           </label>
-                          <input
-                            type="date"
-                            name="dob"
-                            className={`form-control py-2 ${fieldErrors.dob ? "is-invalid" : ""}`}
+                          <KiteDatePicker
                             value={formData.dob}
                             onChange={handleInputChange}
-                            style={{ fontSize: "14px" }}
+                            isInvalid={Boolean(fieldErrors.dob)}
+                            placeholder="Select Date of Birth (DD-MM-YYYY)"
                           />
                           {fieldErrors.dob ? (
                             <div className="invalid-feedback d-block small" style={{ fontSize: "12px" }}>
@@ -698,7 +697,7 @@ function SignUp() {
                             </div>
                           ) : (
                             <div className="form-text text-muted" style={{ fontSize: "11px" }}>
-                              Must be 18+ years of age.
+                              Must be 18+ years of age for Demat KYC.
                             </div>
                           )}
                         </div>

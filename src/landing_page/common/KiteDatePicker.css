@@ -1,0 +1,422 @@
+/* ==========================================================================
+   ZERODHA KITE PROFESSIONAL DATEPICKER COMPONENT STYLES
+   ========================================================================== */
+
+.kite-datepicker-container {
+  position: relative;
+  width: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Trigger Input Box */
+.kite-datepicker-input {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 42px;
+  padding: 0 12px;
+  background-color: #ffffff;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  cursor: text;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  box-sizing: border-box;
+}
+
+.kite-datepicker-input:hover {
+  border-color: #adb5bd;
+}
+
+.kite-datepicker-input:focus-within,
+.kite-datepicker-input.is-focused {
+  border-color: #387ed1;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(56, 126, 209, 0.2);
+}
+
+.kite-datepicker-input.is-invalid {
+  border-color: #dc3545;
+}
+
+.kite-datepicker-input.is-invalid.is-focused,
+.kite-datepicker-input.is-invalid:focus-within {
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.2);
+}
+
+.kite-datepicker-container.disabled .kite-datepicker-input {
+  background-color: #e9ecef;
+  cursor: not-allowed;
+  opacity: 0.75;
+}
+
+.kite-datepicker-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.kite-dp-icon {
+  font-size: 16px;
+  color: #387ed1 !important;
+  cursor: pointer;
+  padding: 4px 0;
+  transition: transform 0.15s ease;
+}
+
+.kite-dp-icon:hover {
+  transform: scale(1.1);
+}
+
+.kite-dp-native-input {
+  width: 100%;
+  border: none !important;
+  background: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  font-size: 14px;
+  color: #212529;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
+
+.kite-dp-native-input::placeholder {
+  color: #94a3b8;
+  font-weight: 400;
+  font-size: 13px;
+}
+
+.kite-datepicker-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 8px;
+  flex-shrink: 0;
+}
+
+.kite-age-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+
+.kite-age-badge.badge-adult {
+  background-color: #e6f4ea;
+  color: #137333;
+  border: 1px solid #ceead6;
+}
+
+.kite-age-badge.badge-minor {
+  background-color: #fef7e0;
+  color: #b06000;
+  border: 1px solid #feefc3;
+}
+
+.kite-dp-clear-btn {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  padding: 4px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  line-height: 1;
+  transition: all 0.15s ease;
+}
+
+.kite-dp-clear-btn:hover {
+  background-color: #f1f5f9;
+  color: #ef4444;
+}
+
+.kite-dp-toggle-btn {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  padding: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.kite-dp-arrow {
+  color: #94a3b8;
+  font-size: 11px;
+  transition: transform 0.2s ease;
+}
+
+.kite-dp-arrow.open {
+  transform: rotate(180deg);
+}
+
+/* Floating Popover Calendar */
+.kite-calendar-popover {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 1050;
+  width: 324px;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.06);
+  padding: 12px;
+  box-sizing: border-box;
+  animation: kiteCalendarSlideDown 0.16s ease-out;
+}
+
+@keyframes kiteCalendarSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Quick Age Jump Row */
+.kite-quick-jump-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #f1f5f9;
+  flex-wrap: wrap;
+}
+
+.quick-jump-label {
+  font-size: 10.5px;
+  color: #64748b;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.quick-jump-pills {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.quick-pill {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  color: #475569;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 7px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.quick-pill:hover {
+  background-color: #eef5ff;
+  border-color: #387ed1;
+  color: #387ed1;
+}
+
+.quick-pill.active {
+  background-color: #387ed1;
+  border-color: #387ed1;
+  color: #ffffff;
+}
+
+/* Header Month / Year Selectors */
+.kite-calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.kite-nav-btn {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.kite-nav-btn:hover {
+  background-color: #f8fafc;
+  border-color: #cbd5e1;
+  color: #387ed1;
+}
+
+.kite-select-group {
+  display: flex;
+  gap: 6px;
+  flex: 1;
+}
+
+.kite-header-select {
+  height: 30px;
+  padding: 0 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #1e293b;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.kite-header-select:focus {
+  border-color: #387ed1;
+}
+
+.kite-header-select.month-select {
+  flex: 1.2;
+}
+
+.kite-header-select.year-select {
+  flex: 1;
+}
+
+/* Weekday Grid */
+.kite-weekdays-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+.kite-weekday-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #94a3b8;
+  padding: 4px 0;
+  text-transform: uppercase;
+}
+
+/* Days Grid */
+.kite-days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.kite-day-cell {
+  aspect-ratio: 1;
+  background: none;
+  border: none;
+  border-radius: 4px;
+  color: #1e293b;
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  padding: 0;
+}
+
+.kite-day-cell:hover:not(.is-disabled):not(.is-selected) {
+  background-color: #eef5ff;
+  color: #387ed1;
+}
+
+.kite-day-cell.outside-month {
+  color: #cbd5e1;
+  font-weight: 400;
+}
+
+.kite-day-cell.is-selected {
+  background-color: #387ed1 !important;
+  color: #ffffff !important;
+  font-weight: 700;
+}
+
+.kite-day-cell.is-disabled {
+  color: #e2e8f0;
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+/* Footer Bar */
+.kite-calendar-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.footer-age-text {
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.footer-tip {
+  font-size: 11px;
+}
+
+.kite-footer-actions {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.kite-footer-btn {
+  background: none;
+  border: none;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.kite-footer-btn.clear {
+  color: #dc3545;
+}
+
+.kite-footer-btn.clear:hover {
+  background-color: #fee2e2;
+}
+
+.kite-footer-btn.close {
+  background-color: #f1f5f9;
+  color: #475569;
+}
+
+.kite-footer-btn.close:hover {
+  background-color: #e2e8f0;
+  color: #1e293b;
+}
+
+/* Responsive Handling */
+@media (max-width: 480px) {
+  .kite-calendar-popover {
+    width: 100%;
+    left: 0;
+    right: 0;
+  }
+}
