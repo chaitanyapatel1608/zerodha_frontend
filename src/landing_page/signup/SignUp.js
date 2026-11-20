@@ -75,9 +75,7 @@ function SignUp() {
   // Focus first OTP box when entering Step 2
   useEffect(() => {
     if (step === 2 && otpInputsRef.current[0]) {
-      setTimeout(() => {
-        otpInputsRef.current[0]?.focus();
-      }, 100);
+      otpInputsRef.current[0].focus();
     }
   }, [step]);
 
@@ -239,20 +237,15 @@ function SignUp() {
   const handleOtpChange = (index, value) => {
     if (value && !/^\d+$/.test(value)) return;
 
-    const newOtp = [...otp];
     if (value.length > 1) {
       const pasted = value.slice(0, 6).split("");
-      pasted.forEach((char, idx) => {
-        if (idx < 6) newOtp[idx] = char;
-      });
-      setOtp(newOtp);
+      setOtp(previous => previous.map((digit, i) => pasted[i] ?? digit));
       const nextFocus = Math.min(pasted.length, 5);
       otpInputsRef.current[nextFocus]?.focus();
       return;
     }
 
-    newOtp[index] = value;
-    setOtp(newOtp);
+    setOtp(previous => previous.map((digit, i) => i === index ? value : digit));
 
     if (value && index < 5) {
       otpInputsRef.current[index + 1]?.focus();

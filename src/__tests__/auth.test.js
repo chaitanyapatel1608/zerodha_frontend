@@ -24,7 +24,7 @@ describe("Frontend Security & Auth Regression Suite", () => {
       fullName: "Test Trader",
       email: "trader@example.com",
     });
-    expect(launchUrl).toBe(`${DASHBOARD_URL}/`);
+    expect(launchUrl).toBe(`${DASHBOARD_URL}/dashboard`);
     expect(launchUrl).not.toContain("token=");
     expect(launchUrl).not.toContain("email=");
   });

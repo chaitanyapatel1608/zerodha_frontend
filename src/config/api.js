@@ -99,7 +99,7 @@ function isValidDashboardRedirect(url) {
 
 export function buildKiteLaunchUrl(user, token, redirectUri = "") {
   if (!user) return "/login";
-  let base = `${DASHBOARD_URL}/`;
+  let base = `${DASHBOARD_URL}/dashboard`;
   if (redirectUri && isValidDashboardRedirect(redirectUri)) {
     if (redirectUri.startsWith("/")) {
       base = `${DASHBOARD_URL}${redirectUri}`;
