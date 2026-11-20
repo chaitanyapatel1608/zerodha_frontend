@@ -689,7 +689,7 @@ function SignUp() {
                             value={formData.dob}
                             onChange={handleInputChange}
                             isInvalid={Boolean(fieldErrors.dob)}
-                            placeholder="Select Date of Birth (DD-MM-YYYY)"
+                            placeholder="DD-MM-YYYY"
                           />
                           {fieldErrors.dob ? (
                             <div className="invalid-feedback d-block small" style={{ fontSize: "12px" }}>

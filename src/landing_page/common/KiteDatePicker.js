@@ -276,8 +276,11 @@ const KiteDatePicker = ({
 
         <div className="kite-datepicker-right">
           {calculatedAge !== null && !isNaN(calculatedAge) && (
-            <span className={`kite-age-badge ${calculatedAge >= 18 ? "badge-adult" : "badge-minor"}`}>
-              {calculatedAge} yrs {calculatedAge >= 18 ? "• 18+ OK" : "• Minor"}
+            <span
+              className={`kite-age-badge ${calculatedAge >= 18 ? "badge-adult" : "badge-minor"}`}
+              title={`Calculated Age: ${calculatedAge} years (${calculatedAge >= 18 ? "SEBI 18+ OK" : "Minor"})`}
+            >
+              {calculatedAge} yrs
             </span>
           )}
 

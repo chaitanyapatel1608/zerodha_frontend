@@ -23,7 +23,7 @@ describe("KiteDatePicker Component Suite", () => {
     render(<KiteDatePicker name="dob" value="2000-01-15" onChange={handleChange} />);
     
     // Check age badge
-    expect(screen.getByText(/yrs • 18\+ OK/)).toBeInTheDocument();
+    expect(screen.getByText(/26 yrs/)).toBeInTheDocument();
 
     // Open calendar popover
     const toggleBtn = screen.getByLabelText("Toggle Calendar");
